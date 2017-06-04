@@ -1,3 +1,4 @@
 urls = [
-    "https://www.otodom.pl/oferta/mieszkanie-66-60-m-gdansk-ID3a0bu.html#gallery[1]",
+    "file:///path_to_parquetry/parquetry/spiders/pages/example-link1.html",
+    "file:///path_to_parquetry/parquetry/spiders/pages/example-link2.html"
 ]

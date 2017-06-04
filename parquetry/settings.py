@@ -19,7 +19,7 @@ NEWSPIDER_MODULE = 'parquetry.spiders'
 #USER_AGENT = 'parquetry (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -68,7 +68,7 @@ ITEM_PIPELINES =  {'parquetry.pipelines.MongoDBPipeline' : 300 }
 
 MONGODB_SERVER = "localhost"
 MONGODB_PORT = 27017
-MONGODB_DB = "parquetry_test"
+MONGODB_DB = "parquetry_test1"
 MONGODB_COLLECTION = "parquetry"
 
 # Enable and configure the AutoThrottle extension (disabled by default)
