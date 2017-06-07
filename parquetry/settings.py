@@ -9,7 +9,7 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 # Available levels are: CRITICAL, ERROR, WARNING, INFO, DEBUG.
-LOG_LEVEL = 'WARNING'
+LOG_LEVEL = 'INFO'
 
 BOT_NAME = 'parquetry'
 
