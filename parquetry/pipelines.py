@@ -33,6 +33,9 @@ class MongoDBPipeline(object):
                 valid = False
                 raise DropItem("Missing {0}!".format(data))
         if valid:
+            if 'niedostepne' in  item :
+                self.process_not_available(item['url'])
+                return
             document_in_db = self.get_doc_if_exist(item)
             if document_in_db:
                 items_to_update = self.compare_items(item,document_in_db)
@@ -45,8 +48,19 @@ class MongoDBPipeline(object):
       
             logging.debug('parquetry data added to MongoDB database! ')
 
-            
-        return item
+
+    def process_not_available(self, url):
+        if self.collection.find_one({'url': url}, 
+                                    { 'niedostepne': { '$elemMatch': {'$ne': None} } } 
+                                    ):
+            return
+        else:     
+            self.collection.update_one(
+            {"url": url},
+            {"$set": {'niedostepne': self.timestamp}}
+            )
+
+
 
     def get_doc_if_exist(self,item):
         return self.collection.find_one({'idOto': item['idOto']})
@@ -65,7 +79,7 @@ class MongoDBPipeline(object):
             if key in doc_in_db.keys():
                 if items[key] != doc_in_db[key]:
                     records_to_insert[key] = items[key]
-                    records_to_insert[key +'_'+self.timestamp] = doc_in_db[key]
+                    records_to_insert[key +'_' + self.timestamp] = doc_in_db[key]
             else:
                 records_to_insert[key] = items[key]
         return records_to_insert

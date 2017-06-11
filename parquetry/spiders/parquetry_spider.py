@@ -16,17 +16,42 @@ class parquetrySpider(Spider):
         cena = Selector(response).xpath(CENA)
         cenaM2 = Selector(response).xpath(CENA_M2)
         idOto= Selector(response).xpath(ID_OTO)
+        nieaktualne = Selector(response).xpath(NIEAKTUALNE)
+        niedostepne = Selector(response).xpath(NIEDOSTEPNE)
         
         print("==================================")
         item = parquetryItem()
-        # if page outdated - set outdated date and yield item 
+        item['url'] = response.url
+        
+        not_available = self.extract_if_exists(niedostepne)
+        print not_available
+        print("==================================") 
+        
+        if not_available:
+            print("*********************") 
+            item['niedostepne'] = True 
+            yield item
+            return
+        
+      
+
+    
+        item['idOto'] = self.extract_digits(idOto.extract()[0])
+
+        # if page not_available - set not_available date and yield item 
         item['cena'] = cena.extract()[0]
         item['cenaM2'] = cenaM2.extract()[0]
 
-        item['idOto'] = self.extract_digits(idOto.extract()[0])
+        item['nieaktualne'] = self.extract_if_exists(nieaktualne)
+     
 
         yield item
 
     def extract_digits(self, string_to_process):
         new_string = string_to_process.encode('latin-1')
         return int(filter(str.isdigit, new_string))
+    
+    def extract_if_exists(self, sel):
+        extracted_value = sel.extract()
+        if extracted_value:
+            return extracted_value[0]
