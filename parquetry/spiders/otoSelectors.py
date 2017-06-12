@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+TYTUL = '//h1//text()'
 LISTA_BASE = '//li[text()[contains(.,"{}")]]'
 
 CENA_BASE = LISTA_BASE.format('cena')

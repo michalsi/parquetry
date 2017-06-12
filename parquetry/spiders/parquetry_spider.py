@@ -12,39 +12,28 @@ class parquetrySpider(Spider):
     start_urls = urls
 
     def parse(self, response):
-
         cena = Selector(response).xpath(CENA)
         cenaM2 = Selector(response).xpath(CENA_M2)
         idOto= Selector(response).xpath(ID_OTO)
         nieaktualne = Selector(response).xpath(NIEAKTUALNE)
         niedostepne = Selector(response).xpath(NIEDOSTEPNE)
-        
-        print("==================================")
+
         item = parquetryItem()
         item['url'] = response.url
+        item['tytul'] = Selector(response).xpath(TYTUL).extract()[0]
         
         not_available = self.extract_if_exists(niedostepne)
-        print not_available
-        print("==================================") 
-        
+       
         if not_available:
-            print("*********************") 
             item['niedostepne'] = True 
             yield item
             return
-        
-      
-
-    
+   
         item['idOto'] = self.extract_digits(idOto.extract()[0])
-
-        # if page not_available - set not_available date and yield item 
         item['cena'] = cena.extract()[0]
         item['cenaM2'] = cenaM2.extract()[0]
 
         item['nieaktualne'] = self.extract_if_exists(nieaktualne)
-     
-
         yield item
 
     def extract_digits(self, string_to_process):

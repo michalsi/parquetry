@@ -13,6 +13,7 @@ class parquetryItem(scrapy.Item):
     # name = scrapy.Field()
     url = scrapy.Field()
     
+    tytul = scrapy.Field()
     cena = scrapy.Field()
     cenaM2 = scrapy.Field()
     idOto = scrapy.Field()

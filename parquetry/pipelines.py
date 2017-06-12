@@ -33,7 +33,7 @@ class MongoDBPipeline(object):
                 valid = False
                 raise DropItem("Missing {0}!".format(data))
         if valid:
-            if 'niedostepne' in  item :
+            if 'niedostepne' in item :
                 self.process_not_available(item['url'])
                 return
             document_in_db = self.get_doc_if_exist(item)
@@ -54,12 +54,13 @@ class MongoDBPipeline(object):
                                     { 'niedostepne': { '$elemMatch': {'$ne': None} } } 
                                     ):
             return
-        else:     
-            self.collection.update_one(
-            {"url": url},
-            {"$set": {'niedostepne': self.timestamp}}
-            )
-
+        else:
+            if self.collection.find_one({'url': url}):
+                self.collection.update_one({"url": url}
+                                           ,{"$set": {'niedostepne': self.timestamp}}
+                                           )
+            else:
+                self.collection.insert({"url": url,'niedostepne': self.timestamp})
 
 
     def get_doc_if_exist(self,item):
