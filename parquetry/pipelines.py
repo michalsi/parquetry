@@ -10,6 +10,7 @@ import pymongo
 from scrapy.conf import settings
 from scrapy.exceptions import DropItem
 import logging
+from scrapy.selector import Selector
 
 import datetime
 
@@ -36,6 +37,14 @@ class MongoDBPipeline(object):
             if 'niedostepne' in item :
                 self.process_not_available(item['url'])
                 return
+            #Extract separate items//strong
+            for index, element in enumerate(item['sublista_kategorie']):
+                item[element] =  item['sublista_text'][index]
+#             TODO check if its working: 
+            DropItem(item['sublista_kategorie'])
+            DropItem(item['sublista_text'])
+            
+            #TODO extract update insert to method
             document_in_db = self.get_doc_if_exist(item)
             if document_in_db:
                 items_to_update = self.compare_items(item,document_in_db)

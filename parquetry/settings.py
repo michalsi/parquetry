@@ -70,7 +70,7 @@ ITEM_PIPELINES =  {'parquetry.pipelines.MongoDBPipeline' : 300 }
 
 MONGODB_SERVER = "localhost"
 MONGODB_PORT = 27017
-MONGODB_DB = "parquetry_test1"
+MONGODB_DB = "parquetry_test2-sublista2"
 MONGODB_COLLECTION = "parquetry"
 
 # Enable and configure the AutoThrottle extension (disabled by default)

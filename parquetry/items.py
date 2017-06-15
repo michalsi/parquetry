@@ -19,5 +19,12 @@ class parquetryItem(scrapy.Item):
     idOto = scrapy.Field()
     nieaktualne = scrapy.Field() # historical data visible
     niedostepne = scrapy.Field() #no historical data visible
-    # url = Field()
+    sublista_kategorie = scrapy.Field()
+#     sublista_text = scrapy.Field()
+     
+    def __setitem__(self, key, value):
+        if key not in self.fields:
+            self.fields[key] = scrapy.Field()
+        super(parquetryItem, self).__setitem__(key, value)
+        
     pass
