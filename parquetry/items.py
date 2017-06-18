@@ -20,8 +20,12 @@ class parquetryItem(scrapy.Item):
     nieaktualne = scrapy.Field() # historical data visible
     niedostepne = scrapy.Field() #no historical data visible
     sublista_kategorie = scrapy.Field()
-#     sublista_text = scrapy.Field()
-     
+    sublista_text = scrapy.Field()
+    image_urls = scrapy.Field()
+    images = scrapy.Field()
+    galery = scrapy.Field()
+    
+    
     def __setitem__(self, key, value):
         if key not in self.fields:
             self.fields[key] = scrapy.Field()

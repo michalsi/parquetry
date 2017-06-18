@@ -37,23 +37,10 @@ class MongoDBPipeline(object):
             if 'niedostepne' in item :
                 self.process_not_available(item['url'])
                 return
-            #Extract separate items//strong
-            for index, element in enumerate(item['sublista_kategorie']):
-                item[element] =  item['sublista_text'][index]
-#             TODO check if its working: 
-            DropItem(item['sublista_kategorie'])
-            DropItem(item['sublista_text'])
             
-            #TODO extract update insert to method
-            document_in_db = self.get_doc_if_exist(item)
-            if document_in_db:
-                items_to_update = self.compare_items(item,document_in_db)
-                if items_to_update:
-                    self.update_document_in_db(item['idOto'], items_to_update)               
-            else:
-                logging.info('inserting new entry')
-                self.collection.insert(dict(item))
-                logging.info( item )
+            self.extract_sub_list_items(item)
+            
+            self.update_or_insert_items_in_db(item)
       
             logging.debug('parquetry data added to MongoDB database! ')
 
@@ -71,7 +58,24 @@ class MongoDBPipeline(object):
             else:
                 self.collection.insert({"url": url,'niedostepne': self.timestamp})
 
+    def extract_sub_list_items(self, item):
+        for index, element in enumerate(item['sublista_kategorie']):
+            item[element] = item['sublista_text'][index]
+        
+        item.__delitem__('sublista_kategorie')
+        item.__delitem__('sublista_text')
 
+    def update_or_insert_items_in_db(self, item):
+        document_in_db = self.get_doc_if_exist(item)
+        if document_in_db:
+            items_to_update = self.get_diff_items(item, document_in_db)
+            if items_to_update:
+                self.update_document_in_db(item['idOto'], items_to_update)
+        else:
+            logging.info('inserting new entry')
+            self.collection.insert(dict(item))
+            logging.info(item)
+            
     def get_doc_if_exist(self,item):
         return self.collection.find_one({'idOto': item['idOto']})
 
@@ -83,7 +87,7 @@ class MongoDBPipeline(object):
         logging.info('updated oto ID: ' + str(oto_id) + ' with new valuses: ')
         logging.info( items_to_update)
 
-    def compare_items(self, items, doc_in_db):
+    def get_diff_items(self, items, doc_in_db):
         records_to_insert = {}
         for key in items.keys():
             if key in doc_in_db.keys():

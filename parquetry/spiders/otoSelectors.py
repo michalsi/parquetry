@@ -17,3 +17,5 @@ POWIERZCHNIA = LISTA_BASE.format('powierzchnia') + '//strong/text()'
 
 SUB_LIST_KATEGORIE = '//ul[contains(@class, "sub-list")]//li//strong/text()'
 SUB_LIST_TEXT = '//ul[contains(@class, "sub-list")]//li/text()'
+GALERY = './/*[@id="offer-gallery"]//div[contains(@class, "atlas-slider-content")]/a'
+IMAGE_URLS = '//div[contains(@class, "gallery-box-image" )]//div[contains(@class, "atlas-slider-content")]/a/@href'
