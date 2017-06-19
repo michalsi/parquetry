@@ -1,8 +1,7 @@
 from scrapy import Spider
 from scrapy.selector import Selector
-
+from scrapy_splash import SplashRequest
 from parquetry.items import parquetryItem
-
 from otoSelectors import *
 from urls import *
 import select
@@ -12,6 +11,14 @@ class parquetrySpider(Spider):
     name = "parquetry"
    
     start_urls = urls
+    
+    
+    def start_requests(self):
+        for url in self.start_urls:
+            yield SplashRequest(url, self.parse,
+                endpoint='render.html',
+                args={'wait': 0.5},
+            )
 
     def parse(self, response):
 
