@@ -13,14 +13,27 @@ class parquetryItem(scrapy.Item):
     # name = scrapy.Field()
     url = scrapy.Field()
     
+    idOto = scrapy.Field()
+    
     tytul = scrapy.Field()
     cena = scrapy.Field()
     cenaM2 = scrapy.Field()
-    idOto = scrapy.Field()
+    
     nieaktualne = scrapy.Field() # historical data visible
     niedostepne = scrapy.Field() #no historical data visible
+    
+    mainlista_kategorie = scrapy.Field()
+    mainlista_text = scrapy.Field()
     sublista_kategorie = scrapy.Field()
     sublista_text = scrapy.Field()
+    additional_params_kategorie = scrapy.Field()
+    additional_params_text = scrapy.Field()
+    footer_list = scrapy.Field()
+    
+    opis = scrapy.Field()
+    
+    id_biura = scrapy.Field()
+    
     image_urls = scrapy.Field()
     images = scrapy.Field()
     galery = scrapy.Field()

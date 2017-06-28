@@ -39,11 +39,21 @@ class parquetrySpider(Spider):
         item['cena'] = Selector(response).xpath(CENA).extract()[0]
         item['cenaM2'] = Selector(response).xpath(CENA_M2).extract()[0]
 
-
+        item['mainlista_kategorie'] =  Selector(response).xpath(MAIN_LIST_KATEGORIE).extract()
+        item['mainlista_text'] =  Selector(response).xpath(MAIN_LIST_TEXT).extract()
+        
         item['sublista_kategorie'] =  Selector(response).xpath(SUB_LIST_KATEGORIE).extract()
         item['sublista_text'] =  Selector(response).xpath(SUB_LIST_TEXT).extract()
+        
+        item['additional_params_kategorie'] =  Selector(response).xpath(ADDITIONAL_PARAMS_KATEGORIE).extract()
+        item['additional_params_text'] =  Selector(response).xpath(ADDITIONAL_PARAMS_TEXT).extract()        
+       
+        item['opis'] = Selector(response).xpath(OPIS).extract()[0]
+        
+        item['footer_list'] = Selector(response).xpath(FOOTER_LIST).extract()
+        
         item['image_urls'] = Selector(response).xpath(IMAGE_URLS).extract()
-        item['galery'] = Selector(response).xpath(GALERY).extract()
+#         item['galery'] = Selector(response).xpath(GALERY).extract()
         
         item['nieaktualne'] = self.extract_if_exists(
             Selector(response).xpath(NIEAKTUALNE))

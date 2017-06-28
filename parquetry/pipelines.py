@@ -14,6 +14,7 @@ from scrapy.selector import Selector
 
 import datetime
 
+
 class MongoDBPipeline(object):
 
     def __init__(self):
@@ -27,6 +28,7 @@ class MongoDBPipeline(object):
         self.collection = db[settings['MONGODB_COLLECTION']]
         self.collection.ensure_index('idOto', unique=True)
 
+
     def process_item(self, item, spider):
         valid = True
         for data in item:
@@ -38,7 +40,10 @@ class MongoDBPipeline(object):
                 self.process_not_available(item['url'])
                 return
             
-            self.extract_sub_list_items(item)
+            self.extract_items_from_list(item, 'mainlista')
+            self.extract_items_from_list(item, 'sublista')            
+            self.extract_items_from_list(item, 'additional_params')
+            self.extract_footer_items(item)
             
             self.update_or_insert_items_in_db(item)
       
@@ -57,13 +62,23 @@ class MongoDBPipeline(object):
                                            )
             else:
                 self.collection.insert({"url": url,'niedostepne': self.timestamp})
+      
+    def extract_items_from_list(self,item, list_name):
+        category_list = (list_name + '_kategorie')
+        text_list = (list_name + '_text')
+        for index, element in enumerate(item[category_list]):
+            item[element] = item[ text_list][index]
+ 
+        item.__delitem__(category_list)
+        item.__delitem__( text_list)
 
-    def extract_sub_list_items(self, item):
-        for index, element in enumerate(item['sublista_kategorie']):
-            item[element] = item['sublista_text'][index]
+    def extract_footer_items(self,item):
+        for element in item['footer_list']:
+            category = element.split(':')[0].strip()
+            value = element.split(':')[1].strip()
+            item[category] = value
+        item.__delitem__( 'footer_list')
         
-        item.__delitem__('sublista_kategorie')
-        item.__delitem__('sublista_text')
 
     def update_or_insert_items_in_db(self, item):
         document_in_db = self.get_doc_if_exist(item)
